@@ -2,12 +2,22 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>CoC 7e Skill Roll</title>
+  <title>CoC 7e Roller</title>
   <style>
-    body {
+    /* Make the popover content fill the whole popover */
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
       font-family: sans-serif;
+      box-sizing: border-box;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
       padding: 10px;
-      width: 280px;
     }
 
     input, select, button {
@@ -15,17 +25,19 @@
       margin-top: 5px;
       padding: 5px;
       font-size: 14px;
+      box-sizing: border-box;
     }
 
+    /* Chat output area */
     #chat {
+      flex: 1;                 /* take remaining vertical space */
       font-family: monospace;
       white-space: pre-wrap;
       margin: 10px 0 0 0;
       padding: 0;
       border: none;
       background: none;
-      max-height: 300px;        /* max height before scrolling */
-      overflow-y: auto;         /* scroll when needed */
+      overflow-y: auto;        /* scroll only if needed */
     }
 
     .result {
@@ -68,6 +80,7 @@
     function rollD100(bonus = 0) {
       let tens = rollD10();
       let units = rollD10();
+
       if (bonus !== 0) {
         for (let i = 0; i < Math.abs(bonus); i++) {
           const newTens = rollD10();
@@ -75,8 +88,9 @@
           else tens = Math.max(tens, newTens);
         }
       }
+
       let roll = tens * 10 + units;
-      if (roll === 0) roll = 100;  // 00 = 100
+      if (roll === 0) roll = 100; // handle 00 as 100
       return { roll, tens, units };
     }
 
@@ -99,7 +113,7 @@
         Skill: ${skill} | Result: ${resultType.toUpperCase()}
       `;
       chat.appendChild(div);
-      chat.scrollTop = chat.scrollHeight;
+      chat.scrollTop = chat.scrollHeight; // scroll to latest
     }
 
     document.getElementById('rollBtn').addEventListener('click', () => {
