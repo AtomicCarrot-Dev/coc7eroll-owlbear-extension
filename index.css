@@ -36,16 +36,27 @@ button:hover {
   background: #666;
 }
 
+/* Container wrapping the output */
+#output-container {
+  margin: 0;
+  padding: 0;
+  height: auto;            /* allow container to shrink to content */
+  overflow: hidden;        /* hide any extra space */
+}
+
+/* The output box itself */
 #output {
   font-family: monospace;
   color: #0f0;
-  white-space: pre-wrap;   /* keep line breaks */
-  margin: 0;               /* remove external spacing */
-  padding: 0;              /* remove internal spacing */
-  border: none;            /* remove border */
-  background: none;        /* remove background */
-  line-height: 1;          /* shrink line height to text height */
-  min-height: 0;           /* remove any minimum height */
-  overflow: hidden;        /* prevent extra space from wrapping */
-  display: inline-block;   /* shrink box to text width */
+  white-space: pre-wrap;   /* preserve line breaks */
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  line-height: 1;          /* shrink line height to text */
+  min-height: 0;           /* remove minimum height */
+  height: auto;            /* fit height to content */
+  overflow: hidden;        /* prevent scroll */
+  display: inline-block;   /* shrink width to text */
 }
+
