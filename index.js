@@ -1,57 +1,40 @@
-import OBR from "https://cdn.skypack.dev/@owlbear-rodeo/sdk";
+// Get references to HTML elements
+const rollButton = document.getElementById('roll');
+const skillInput = document.getElementById('skill');
+const typeSelect = document.getElementById('type');
+const output = document.getElementById('output');
 
-function rollD100(type) {
-  const ones = Math.floor(Math.random() * 10);
-  const tensRolls = [];
-
-  if (type === "bonus" || type === "penalty") {
-    tensRolls.push(Math.floor(Math.random() * 10));
-    tensRolls.push(Math.floor(Math.random() * 10));
-  } else {
-    tensRolls.push(Math.floor(Math.random() * 10));
+// Main roll function
+rollButton.addEventListener('click', () => {
+  const threshold = parseInt(skillInput.value, 10);
+  if (isNaN(threshold) || threshold <= 0) {
+    output.textContent = 'Please enter a valid skill threshold.';
+    return;
   }
 
-  const tens =
-    type === "bonus"
-      ? Math.min(...tensRolls)
-      : type === "penalty"
-      ? Math.max(...tensRolls)
-      : tensRolls[0];
+  const type = typeSelect.value;
 
-  let roll = tens * 10 + ones;
-  if (roll === 0) roll = 100;
+  // Roll 1-100
+  let roll = Math.floor(Math.random() * 100) + 1;
 
-  return roll;
-}
+  // Handle bonus/penalty dice
+  if (type === 'bonus') {
+    const tensExtra = Math.floor(Math.random() * 10) * 10;
+    const units = roll % 10;
+    roll = Math.min(roll, tensExtra + units);
+  } else if (type === 'penalty') {
+    const tensExtra = Math.floor(Math.random() * 10) * 10;
+    const units = roll % 10;
+    roll = Math.max(roll, tensExtra + units);
+  }
 
-function determineSuccess(roll, skill) {
-  if (roll === 1) return "Critical Success";
-  if (roll <= Math.floor(skill / 5)) return "Extreme Success";
-  if (roll <= Math.floor(skill / 2)) return "Hard Success";
-  if (roll <= skill) return "Regular Success";
-  if (roll === 100) return "Fumble";
-  return "Failure";
-}
+  // Determine success level
+  let result = '';
+  if (roll <= threshold / 5) result = 'Extreme Success';
+  else if (roll <= threshold / 2) result = 'Hard Success';
+  else if (roll <= threshold) result = 'Regular Success';
+  else result = 'Failure';
 
-OBR.onReady(() => {
-  const rollButton = document.getElementById("roll");
-  const skillInput = document.getElementById("skill");
-  const rollType = document.getElementById("type");
-  const output = document.getElementById("output");
-
-  rollButton.onclick = () => {
-    const skill = Number(skillInput.value);
-    const type = rollType.value;
-
-    if (!skill || skill < 1 || skill > 99) {
-      output.textContent = "Enter a valid skill value (1–99).";
-      return;
-    }
-
-    const roll = rollD100(type);
-    const result = determineSuccess(roll, skill);
-
-    output.textContent =
-      `Skill Threshold: ${skill}\nRoll Type: ${type}\nRolled Number: ${roll}\nResult: ${result}`;
-  };
+  // Display in <pre>
+  output.textContent = `Rolled: ${roll}\nThreshold: ${threshold}\nResult: ${result}`;
 });
