@@ -3,6 +3,12 @@ body {
   padding: 10px;
   background: #1e1e1e;
   color: #eee;
+  width: 240px;
+}
+
+label {
+  margin-top: 10px;
+  display: block;
 }
 
 input, select, button {
