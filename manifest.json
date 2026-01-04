@@ -5,7 +5,8 @@
   "action": {
     "title": "CoC 7e Roller",
     "icon": "/icon.svg",
-    "popover": "/index.html",
+    "popover": "/coc7eroll-owlbear-extension/wrapper.html",
     "width": 320,
     "height": 350
+  }
 }
