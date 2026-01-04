@@ -38,8 +38,13 @@ button:hover {
 
 #output {
   font-family: monospace;
-  color: #0f0; /* default text color */
+  color: #0f0;
   white-space: pre-wrap; /* preserve line breaks */
-  margin: 5px 0;
-  padding: 5px;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  line-height: 1;        /* shrink line height */
+  min-height: 0;         /* remove any minimum height */
+  overflow: hidden;      /* hide extra space from wrapping */
 }
