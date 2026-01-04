@@ -1,120 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CoC 7e Roller</title>
 <style>
+  /* Dark Owlbear popover style */
   html, body {
     margin: 0;
     padding: 0;
-    font-family: sans-serif;
     width: 100%;
+    height: 100%;
+    font-family: 'Courier New', monospace;
+    background: #111;
+    color: #0f0;
   }
 
   body {
     display: flex;
     flex-direction: column;
     padding: 10px;
+    box-sizing: border-box;
+  }
+
+  label {
+    font-size: 13px;
+    margin-top: 5px;
+    display: block;
   }
 
   input, select, button {
     width: 100%;
-    margin-top: 5px;
-    padding: 5px;
+    margin-top: 4px;
+    padding: 6px;
     font-size: 14px;
-    box-sizing: border-box;
+    border-radius: 6px;
+    border: none;
+    outline: none;
+    background: #222;
+    color: #0f0;
+  }
+
+  button {
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  button:hover {
+    background: #333;
   }
 
   #chat {
-    font-family: monospace;
-    white-space: pre-wrap;
-    margin: 10px 0 0 0;
+    margin-top: 10px;
     padding: 0;
     border: none;
     background: none;
-    overflow: hidden; /* no scroll */
+    flex: 1;
+    overflow-y: auto;
+    font-family: monospace;
+    white-space: pre-wrap;
   }
 
-  .result { margin: 2px 0; }
+  .result {
+    margin: 2px 0;
+  }
+
   .critical { color: #ff0; font-weight: bold; }
   .extreme { color: #0ff; font-weight: bold; }
   .hard { color: #f80; }
   .success { color: #0f0; }
   .fail { color: #f00; }
   .fumble { color: #f0f; font-weight: bold; }
+
   .roll-number { font-weight: bold; }
+  .dice { color: #fff; font-weight: bold; }
 </style>
-
+</head>
 <body>
-  <label>Skill Value:</label>
-  <input type="number" id="skill" min="1" max="100" value="50" />
 
-  <label>Bonus/Penalty Dice:</label>
-  <select id="diceModifier">
-    <option value="0">Normal</option>
-    <option value="1">+1 Bonus</option>
-    <option value="2">+2 Bonus</option>
-    <option value="-1">-1 Penalty</option>
-    <option value="-2">-2 Penalty</option>
-  </select>
+<label>Skill Value:</label>
+<input type="number" id="skill" min="1" max="100" value="50" />
 
-  <button id="rollBtn">Roll</button>
+<label>Bonus/Penalty Dice:</label>
+<select id="diceModifier">
+  <option value="0">Normal</option>
+  <option value="1">+1 Bonus</option>
+  <option value="2">+2 Bonus</option>
+  <option value="-1">-1 Penalty</option>
+  <option value="-2">-2 Penalty</option>
+</select>
 
-  <div id="chat"></div>
+<button id="rollBtn">Roll</button>
 
-  <script>
-    // Adjust chat height to fit remaining space
-    function resizeChat() {
-      const formHeight = document.querySelector('label').offsetHeight * 2
-                        + document.querySelectorAll('input, select, button')[0].offsetHeight
-                        + document.querySelectorAll('input, select, button')[1].offsetHeight
-                        + document.querySelectorAll('input, select, button')[2].offsetHeight
-                        + 30; // extra margin
-      document.getElementById('chat').style.height = `calc(100vh - ${formHeight}px)`;
-    }
+<div id="chat"></div>
 
-    window.addEventListener('resize', resizeChat);
-    window.addEventListener('load', resizeChat);
+<script>
+  function rollD10() { return Math.floor(Math.random() * 10); }
 
-    function rollD10() { return Math.floor(Math.random() * 10); }
+  function rollD100(bonus = 0) {
+    let tens = rollD10();
+    let units = rollD10();
 
-    function rollD100(bonus = 0) {
-      let tens = rollD10();
-      let units = rollD10();
-      if (bonus !== 0) {
-        for (let i = 0; i < Math.abs(bonus); i++) {
-          const newTens = rollD10();
-          tens = bonus > 0 ? Math.min(tens, newTens) : Math.max(tens, newTens);
-        }
+    if (bonus !== 0) {
+      for (let i = 0; i < Math.abs(bonus); i++) {
+        const newTens = rollD10();
+        tens = bonus > 0 ? Math.min(tens, newTens) : Math.max(tens, newTens);
       }
-      let roll = tens * 10 + units;
-      if (roll === 0) roll = 100;
-      return { roll, tens, units };
     }
 
-    function getResult(roll, skill) {
-      if (roll === 1) return 'critical';
-      if (roll <= Math.floor(skill / 5)) return 'extreme';
-      if (roll <= Math.floor(skill / 2)) return 'hard';
-      if (roll <= skill) return 'success';
-      if (roll === 100) return 'fumble';
-      return 'fail';
-    }
+    let roll = tens * 10 + units;
+    if (roll === 0) roll = 100;
+    return { roll, tens, units };
+  }
 
-    function displayResult(rollObj, skill, resultType) {
-      const chat = document.getElementById('chat');
-      const div = document.createElement('div');
-      div.className = 'result ' + resultType;
-      div.innerHTML = `
-        Roll: <span class="roll-number">${rollObj.roll}</span> 
-        (Tens: ${rollObj.tens}, Units: ${rollObj.units}) | 
-        Skill: ${skill} | Result: ${resultType.toUpperCase()}
-      `;
-      chat.appendChild(div);
-      resizeChat();
-    }
+  function getResult(roll, skill) {
+    if (roll === 1) return 'critical';
+    if (roll <= Math.floor(skill / 5)) return 'extreme';
+    if (roll <= Math.floor(skill / 2)) return 'hard';
+    if (roll <= skill) return 'success';
+    if (roll === 100) return 'fumble';
+    return 'fail';
+  }
 
-    document.getElementById('rollBtn').addEventListener('click', () => {
-      const skill = parseInt(document.getElementById('skill').value, 10);
-      const bonus = parseInt(document.getElementById('diceModifier').value, 10);
-      const rollObj = rollD100(bonus);
-      const resultType = getResult(rollObj.roll, skill);
-      displayResult(rollObj, skill, resultType);
-    });
-  </script>
+  function displayResult(rollObj, skill, resultType) {
+    const chat = document.getElementById('chat');
+    const div = document.createElement('div');
+    div.className = 'result ' + resultType;
+
+    div.innerHTML = `
+      Roll: <span class="dice">${rollObj.roll}</span> 
+      (Tens: <span class="dice">${rollObj.tens}</span>, Units: <span class="dice">${rollObj.units}</span>) | 
+      Skill: ${skill} | Result: <span class="${resultType}">${resultType.toUpperCase()}</span>
+    `;
+
+    chat.appendChild(div);
+    chat.scrollTop = chat.scrollHeight;
+  }
+
+  document.getElementById('rollBtn').addEventListener('click', () => {
+    const skill = parseInt(document.getElementById('skill').value, 10);
+    const bonus = parseInt(document.getElementById('diceModifier').value, 10);
+    const rollObj = rollD100(bonus);
+    const resultType = getResult(rollObj.roll, skill);
+    displayResult(rollObj, skill, resultType);
+  });
+</script>
+
 </body>
+</html>
+
