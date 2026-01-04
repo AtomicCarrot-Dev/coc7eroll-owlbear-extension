@@ -1,31 +1,32 @@
-// Get references to HTML elements
+// Grab elements
 const rollButton = document.getElementById('roll');
 const skillInput = document.getElementById('skill');
 const typeSelect = document.getElementById('type');
 const output = document.getElementById('output');
 
-// Main roll function
+// Optional: dice icon in button
+const icon = document.createElement('span');
+icon.textContent = '🎲';
+rollButton.prepend(icon);
+
 rollButton.addEventListener('click', () => {
   const threshold = parseInt(skillInput.value, 10);
   if (isNaN(threshold) || threshold <= 0) {
-    output.textContent = 'Please enter a valid skill threshold.';
+    output.textContent = 'Enter a valid skill threshold.';
     return;
   }
 
   const type = typeSelect.value;
 
-  // Roll 1-100
   let roll = Math.floor(Math.random() * 100) + 1;
 
-  // Handle bonus/penalty dice
-  if (type === 'bonus') {
-    const tensExtra = Math.floor(Math.random() * 10) * 10;
+  // Bonus / Penalty die logic
+  if (type === 'bonus' || type === 'penalty') {
+    const tens1 = Math.floor(roll / 10);
+    const tens2 = Math.floor(Math.random() * 10);
     const units = roll % 10;
-    roll = Math.min(roll, tensExtra + units);
-  } else if (type === 'penalty') {
-    const tensExtra = Math.floor(Math.random() * 10) * 10;
-    const units = roll % 10;
-    roll = Math.max(roll, tensExtra + units);
+    roll = type === 'bonus' ? Math.min(tens1 * 10 + units, tens2 * 10 + units) 
+                             : Math.max(tens1 * 10 + units, tens2 * 10 + units);
   }
 
   // Determine success level
@@ -35,6 +36,11 @@ rollButton.addEventListener('click', () => {
   else if (roll <= threshold) result = 'Regular Success';
   else result = 'Failure';
 
-  // Display in <pre>
-  output.textContent = `Rolled: ${roll}\nThreshold: ${threshold}\nResult: ${result}`;
+  // Update output with colors
+  const color = result.includes('Success') ? '#0f0' : '#f00';
+  output.innerHTML = `
+    <strong>Rolled:</strong> ${roll} <br>
+    <strong>Threshold:</strong> ${threshold} <br>
+    <strong style="color:${color}">${result}</strong>
+  `;
 });
