@@ -1,61 +1,46 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>CoC 7e Roller</title>
-  <style>
-    /* Make the popover content fill the whole popover */
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      width: 100%;
-      font-family: sans-serif;
-      box-sizing: border-box;
-    }
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    width: 100%;
+  }
 
-    body {
-      display: flex;
-      flex-direction: column;
-      padding: 10px;
-    }
+  body {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+  }
 
-    input, select, button {
-      width: 100%;
-      margin-top: 5px;
-      padding: 5px;
-      font-size: 14px;
-      box-sizing: border-box;
-    }
+  input, select, button {
+    width: 100%;
+    margin-top: 5px;
+    padding: 5px;
+    font-size: 14px;
+    box-sizing: border-box;
+  }
 
-    /* Chat output area */
-    #chat {
-      flex: 1;                 /* take remaining vertical space */
-      font-family: monospace;
-      white-space: pre-wrap;
-      margin: 10px 0 0 0;
-      padding: 0;
-      border: none;
-      background: none;
-      overflow-y: auto;        /* scroll only if needed */
-    }
+  #chat {
+    font-family: monospace;
+    white-space: pre-wrap;
+    margin: 10px 0 0 0;
+    padding: 0;
+    border: none;
+    background: none;
+    overflow: hidden; /* no scroll */
+  }
 
-    .result {
-      margin: 2px 0;
-    }
+  .result { margin: 2px 0; }
+  .critical { color: #ff0; font-weight: bold; }
+  .extreme { color: #0ff; font-weight: bold; }
+  .hard { color: #f80; }
+  .success { color: #0f0; }
+  .fail { color: #f00; }
+  .fumble { color: #f0f; font-weight: bold; }
+  .roll-number { font-weight: bold; }
+</style>
 
-    .critical { color: #ff0; font-weight: bold; }
-    .extreme { color: #0ff; font-weight: bold; }
-    .hard { color: #f80; }
-    .success { color: #0f0; }
-    .fail { color: #f00; }
-    .fumble { color: #f0f; font-weight: bold; }
-
-    .roll-number { font-weight: bold; }
-  </style>
-</head>
 <body>
-
   <label>Skill Value:</label>
   <input type="number" id="skill" min="1" max="100" value="50" />
 
@@ -73,24 +58,32 @@
   <div id="chat"></div>
 
   <script>
-    function rollD10() {
-      return Math.floor(Math.random() * 10);
+    // Adjust chat height to fit remaining space
+    function resizeChat() {
+      const formHeight = document.querySelector('label').offsetHeight * 2
+                        + document.querySelectorAll('input, select, button')[0].offsetHeight
+                        + document.querySelectorAll('input, select, button')[1].offsetHeight
+                        + document.querySelectorAll('input, select, button')[2].offsetHeight
+                        + 30; // extra margin
+      document.getElementById('chat').style.height = `calc(100vh - ${formHeight}px)`;
     }
+
+    window.addEventListener('resize', resizeChat);
+    window.addEventListener('load', resizeChat);
+
+    function rollD10() { return Math.floor(Math.random() * 10); }
 
     function rollD100(bonus = 0) {
       let tens = rollD10();
       let units = rollD10();
-
       if (bonus !== 0) {
         for (let i = 0; i < Math.abs(bonus); i++) {
           const newTens = rollD10();
-          if (bonus > 0) tens = Math.min(tens, newTens);
-          else tens = Math.max(tens, newTens);
+          tens = bonus > 0 ? Math.min(tens, newTens) : Math.max(tens, newTens);
         }
       }
-
       let roll = tens * 10 + units;
-      if (roll === 0) roll = 100; // handle 00 as 100
+      if (roll === 0) roll = 100;
       return { roll, tens, units };
     }
 
@@ -113,7 +106,7 @@
         Skill: ${skill} | Result: ${resultType.toUpperCase()}
       `;
       chat.appendChild(div);
-      chat.scrollTop = chat.scrollHeight; // scroll to latest
+      resizeChat();
     }
 
     document.getElementById('rollBtn').addEventListener('click', () => {
@@ -124,6 +117,4 @@
       displayResult(rollObj, skill, resultType);
     });
   </script>
-
 </body>
-</html>
