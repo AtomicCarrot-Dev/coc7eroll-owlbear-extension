@@ -13,7 +13,8 @@ rollButton.prepend(icon);
 rollButton.addEventListener('click', () => {
   const skill = parseInt(skillInput.value, 10);
   if (isNaN(skill) || skill <= 0) {
-    output.textContent = 'Enter a valid skill threshold.';
+    // Use innerHTML here so colors or formatting could work
+    output.innerHTML = '<span style="color:red">Enter a valid skill threshold.</span>';
     return;
   }
 
@@ -46,7 +47,7 @@ rollButton.addEventListener('click', () => {
     result = 'Failure';
   }
 
-  // Display result with color
+  // Determine color
   let color = '#0f0'; // default success green
   if (result === 'Critical Success') color = '#00ffff'; // cyan for crit
   else if (result === 'Extreme Success') color = '#0f0'; // green
@@ -55,9 +56,11 @@ rollButton.addEventListener('click', () => {
   else if (result === 'Failure') color = '#f90'; // orange
   else if (result === 'Fumble') color = '#f00'; // red
 
+  // Display result
   output.innerHTML = `
     <strong>Rolled:</strong> ${roll} <br>
     <strong>Skill:</strong> ${skill} <br>
     <strong style="color:${color}">${result}</strong>
   `;
 });
+
