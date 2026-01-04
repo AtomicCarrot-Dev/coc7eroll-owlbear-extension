@@ -1,0 +1,39 @@
+body {
+  font-family: sans-serif;
+  padding: 10px;
+  background: #1e1e1e;
+  color: #eee;
+}
+
+input, select, button {
+  width: 100%;
+  margin-top: 5px;
+  padding: 6px;
+  border-radius: 6px;
+  border: none;
+  font-size: 14px;
+}
+
+button {
+  background: #444;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-weight: bold;
+  transition: background 0.2s;
+}
+
+button:hover {
+  background: #666;
+}
+
+pre#output {
+  background: #111;
+  padding: 8px;
+  margin-top: 10px;
+  border-radius: 6px;
+  white-space: pre-wrap;
+}
