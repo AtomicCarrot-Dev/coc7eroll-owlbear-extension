@@ -36,10 +36,10 @@ button:hover {
   background: #666;
 }
 
-pre#output {
-  background: #111;
-  padding: 8px;
-  margin-top: 10px;
-  border-radius: 6px;
-  white-space: pre-wrap;
+#output {
+  font-family: monospace;
+  color: #0f0; /* default text color */
+  white-space: pre-wrap; /* preserve line breaks */
+  margin: 5px 0;
+  padding: 5px;
 }
