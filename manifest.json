@@ -1,8 +1,11 @@
 {
-  "manifest_version": 1,
   "name": "Call of Cthulhu 7e Roller",
   "version": "1.0.0",
-  "description": "Skill roll helper for Call of Cthulhu 7e",
-  "author": "Operator",
-  "entry": "index.html"
+  "manifest_version": 1,
+  "action": {
+    "title": "CoC 7e Roller",
+    "icon": "/icon.svg",
+    "popover": "/index.html",
+    "width": 320,
+    "height": 350
 }
