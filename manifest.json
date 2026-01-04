@@ -1,0 +1,7 @@
+{
+  "name": "Call of Cthulhu 7e Roller",
+  "version": "1.0.0",
+  "description": "Skill roll helper for Call of Cthulhu 7e",
+  "author": "Operator",
+  "entry": "index.html"
+}
