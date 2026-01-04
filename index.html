@@ -3,23 +3,24 @@
 <head>
   <meta charset="UTF-8" />
   <title>CoC 7e Skill Roll</title>
-  <style>
-    body { font-family: sans-serif; padding: 10px; width: 240px; }
-    input, select, button { width: 100%; margin-top: 5px; }
-    pre { background: #111; color: #0f0; padding: 8px; white-space: pre-wrap; }
-  </style>
+  <!-- Link external CSS -->
+  <link rel="stylesheet" href="index.css">
 </head>
 <body>
-  <label>Skill Threshold</label>
+  <label for="skill">Skill Threshold</label>
   <input id="skill" type="number" placeholder="Skill threshold" value="50" />
-<select id="type">
-  <option value="standard">Standard</option>
-  <option value="bonus">Bonus</option>
-  <option value="penalty">Penalty</option>
-</select>
-<button id="roll">Roll</button>
-<pre id="output"></pre>
 
-<script type="module" src="index.js"></script>
+  <label for="type">Roll Type</label>
+  <select id="type">
+    <option value="standard">Standard</option>
+    <option value="bonus">Bonus</option>
+    <option value="penalty">Penalty</option>
+  </select>
+
+  <button id="roll">Roll</button>
+  <pre id="output"></pre>
+
+  <!-- JS logic -->
+  <script type="module" src="index.js"></script>
 </body>
 </html>
