@@ -4,7 +4,7 @@
   "manifest_version": 1,
   "action": {
     "title": "CoC 7e Roller",
-    "icon": "/icon.svg",
+    "icon": "icon.svg",
     "popover": "/coc7eroll-owlbear-extension/wrapper.html",
     "width": 320,
     "height": 350
