@@ -39,12 +39,13 @@ button:hover {
 #output {
   font-family: monospace;
   color: #0f0;
-  white-space: pre-wrap; /* preserve line breaks */
-  margin: 0;
-  padding: 0;
-  border: none;
-  background: none;
-  line-height: 1;        /* shrink line height */
-  min-height: 0;         /* remove any minimum height */
-  overflow: hidden;      /* hide extra space from wrapping */
+  white-space: pre-wrap;   /* keep line breaks */
+  margin: 0;               /* remove external spacing */
+  padding: 0;              /* remove internal spacing */
+  border: none;            /* remove border */
+  background: none;        /* remove background */
+  line-height: 1;          /* shrink line height to text height */
+  min-height: 0;           /* remove any minimum height */
+  overflow: hidden;        /* prevent extra space from wrapping */
+  display: inline-block;   /* shrink box to text width */
 }
